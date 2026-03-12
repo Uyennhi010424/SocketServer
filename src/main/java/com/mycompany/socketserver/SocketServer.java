@@ -6,12 +6,6 @@ import java.net.Socket;
 public class SocketServer {
 
     public static void main(String[] args) {
-<<<<<<< HEAD
-        // hehee
-    }// kjdfvbdhvods
-}
-=======
-
         try {
 
             ServerSocket serverSocket = new ServerSocket(1115);
@@ -33,4 +27,3 @@ public class SocketServer {
         }
     }
 }
->>>>>>> 990fc661a5b4e00fd4e941582eb55016bc37d8d9

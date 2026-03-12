@@ -18,7 +18,7 @@ public class SocketServer {
 
                 ClientHandler handler = new ClientHandler(socket);
 
-                handler.start(); // chỉ start thread
+                handler.start(); 
 
             }
 

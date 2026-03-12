@@ -16,33 +16,46 @@ public class ClientManager {
         clients.remove(client);
     }
 
-   public static void broadcast(String message, ClientHandler sender) {
+    public static void broadcast(String message, ClientHandler sender) {
 
-    // kiểm tra có tag @ không
-    if (message.startsWith("@")) {
+        // kiểm tra có tag @ không
+        if (message.startsWith("@")) {
 
-        String[] parts = message.split(" ", 2);
-        String targetUser = parts[0].substring(1); // bỏ dấu @
-        String realMessage = parts.length > 1 ? parts[1] : "";
+            String[] parts = message.split(" ", 2);
+            String targetUser = parts[0].substring(1); // bỏ dấu @
+            String realMessage = parts.length > 1 ? parts[1] : "";
 
-        for (ClientHandler client : clients) {
+            for (ClientHandler client : clients) {
 
-            if (client.getUsername().equals(targetUser)) {
-                client.sendMessage("(Private) " + sender.getUsername() + ": " + realMessage);
-                return;
+                if (client.getUsername().equals(targetUser)) {
+                    client.sendMessage("(Private) " + "[" + sender.getUsername() + "]: " + realMessage);
+                    return;
+                }
+
             }
 
         }
 
-    }
-
-    // nếu không phải @username thì gửi cho tất cả
-    for (ClientHandler client : clients) {
-        if (client != sender) {
-            client.sendMessage(sender.getUsername() + ": " + message);
+        // nếu không phải @username thì gửi cho tất cả
+        for (ClientHandler client : clients) {
+            if (client != sender) {
+                client.sendMessage("[" + sender.getUsername() + "]: " + message);
+            }
         }
     }
-}
+
+    public static void sendUserList() {
+
+        StringBuilder users = new StringBuilder("USERS:");
+
+        for (ClientHandler client : clients) {
+            users.append(client.getUsername()).append(",");
+        }
+
+        for (ClientHandler client : clients) {
+            client.sendMessage(users.toString());
+        }
+    }
 
     public static void sendPrivateMessage(String sender, String receiver, String message) {
 

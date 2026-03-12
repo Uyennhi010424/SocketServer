@@ -53,6 +53,7 @@ public class ClientHandler extends Thread {
             }
 
             ClientManager.addClient(this);
+            ClientManager.sendUserList();
 
             ClientManager.broadcast(username + " tham gia chat", this);
 
@@ -76,6 +77,8 @@ public class ClientHandler extends Thread {
                     ClientManager.broadcast(message, this);
 
                 }
+                
+                
             }
 
         } catch (Exception e) {
@@ -85,6 +88,7 @@ public class ClientHandler extends Thread {
         } finally {
 
             ClientManager.removeClient(this);
+            ClientManager.sendUserList();
 
             ClientManager.broadcast(username + " rời phòng chat", this);
 

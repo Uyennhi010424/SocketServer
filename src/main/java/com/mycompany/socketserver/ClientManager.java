@@ -17,26 +17,7 @@ public class ClientManager {
     }
 
     public static void broadcast(String message, ClientHandler sender) {
-
-        // kiểm tra có tag @ không
-        if (message.startsWith("@")) {
-
-            String[] parts = message.split(" ", 2);
-            String targetUser = parts[0].substring(1); // bỏ dấu @
-            String realMessage = parts.length > 1 ? parts[1] : "";
-
-            for (ClientHandler client : clients) {
-
-                if (client.getUsername().equals(targetUser)) {
-                    client.sendMessage("(Private) " + "[" + sender.getUsername() + "]: " + realMessage);
-                    return;
-                }
-
-            }
-
-        }
-
-        // nếu không phải @username thì gửi cho tất cả
+        // gửi cho tất cả (trừ người gửi)
         for (ClientHandler client : clients) {
             if (client != sender) {
                 client.sendMessage("[" + sender.getUsername() + "]: " + message);
@@ -63,7 +44,7 @@ public class ClientManager {
 
             if (client.getUsername().equals(receiver)) {
 
-                client.sendMessage("(Private) " + sender + ": " + message);
+                client.sendMessage("PM: " + sender + ": " + message);
 
                 break;
             }

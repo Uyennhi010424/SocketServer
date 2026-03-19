@@ -8,7 +8,7 @@ public class SocketServer {
     public static void main(String[] args) {
         try {
 
-            ServerSocket serverSocket = new ServerSocket(1115);
+            ServerSocket serverSocket = new ServerSocket(1111);
             System.out.println("Server started...");
 
             while (true) {

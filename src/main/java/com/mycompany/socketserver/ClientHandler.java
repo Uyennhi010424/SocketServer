@@ -61,22 +61,13 @@ public class ClientHandler extends Thread {
 
             while ((message = in.readLine()) != null) {
 
+                if (handlePrivateMessage(message)) {
+                    continue;
+                }
+
                 System.out.println("[" + username + "] " + message);
 
-                if (message.startsWith("@")) {
-
-                    String[] parts = message.split(" ", 2);
-
-                    String targetUser = parts[0].substring(1);
-                    String privateMsg = parts.length > 1 ? parts[1] : "";
-
-                    ClientManager.sendPrivateMessage(username, targetUser, privateMsg);
-
-                } else {
-
-                    ClientManager.broadcast(message, this);
-
-                }
+                ClientManager.broadcast(message, this);
                 
                 
             }
@@ -97,5 +88,53 @@ public class ClientHandler extends Thread {
             } catch (Exception e) {
             }
         }
+    }
+
+    private boolean handlePrivateMessage(String message) {
+        if (message == null) {
+            return false;
+        }
+
+        String trimmed = message.trim();
+        if (trimmed.isEmpty()) {
+            return false;
+        }
+
+        if (trimmed.startsWith("@")) {
+            String[] parts = trimmed.split(" ", 2);
+            String targetUser = parts[0].substring(1);
+            String privateMsg = parts.length > 1 ? parts[1] : "";
+            ClientManager.sendPrivateMessage(username, targetUser, privateMsg);
+            System.out.println("[PM] " + username + " -> " + targetUser + ": " + privateMsg);
+            return true;
+        }
+
+        String lower = trimmed.toLowerCase();
+        String command = null;
+        if (lower.startsWith("/pm ")) {
+            command = "/pm";
+        } else if (lower.startsWith("/w ")) {
+            command = "/w";
+        } else if (lower.startsWith("/msg ")) {
+            command = "/msg";
+        } else if (lower.startsWith("/whisper ")) {
+            command = "/whisper";
+        }
+
+        if (command == null) {
+            return false;
+        }
+
+        String body = trimmed.substring(command.length()).trim();
+        int spaceIndex = body.indexOf(' ');
+        if (spaceIndex <= 0) {
+            return true;
+        }
+
+        String targetUser = body.substring(0, spaceIndex).trim();
+        String privateMsg = body.substring(spaceIndex + 1).trim();
+        ClientManager.sendPrivateMessage(username, targetUser, privateMsg);
+        System.out.println("[PM] " + username + " -> " + targetUser + ": " + privateMsg);
+        return true;
     }
 }
